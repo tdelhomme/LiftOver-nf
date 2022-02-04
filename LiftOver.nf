@@ -25,7 +25,7 @@ params.output_folder = "liftover_output"
 params.genome_from = null
 params.genome_into = null
 params.picard = "picard"
-params.ext = ".bed"
+params.file_type = "bed"
 
 log.info ""
 log.info "--------------------------------------------------------"
@@ -55,7 +55,7 @@ if (params.help) {
     log.info '    --genome_into          STRING                  Name of genome of outputs.'
     log.info 'Optional arguments:'
     log.info '    --picard               STRING                  Where is picard? default: picard.'
-    log.info '    --ext                  STRING                  Extension of input files, default:.bed.'
+    log.info '    --file_type            STRING                  File type: bed or vcf (default is bed).'
     log.info '    --output_folder        FOLDER                  Output folder (default: liftover_output).'
     log.info ''
     exit 1
@@ -66,6 +66,7 @@ assert (params.genome_from != true) && (params.genome_from != null) : "please sp
 assert (params.genome_into != true) && (params.genome_into != null) : "please specify --genome_into option"
 
 assert (params.input_folder != true) && (params.input_folder != null) : "please specify --input_folder option"
+assert (params.file_type == "bed") || (params.file_type == "vcf") : "please specify --file_type option as either bed or vcf"
 
 fasta_ref = file(params.ref)
 fasta_ref_fai = file( params.ref+'.fai' )
@@ -95,17 +96,27 @@ process liftover {
 
     shell:
     input_tag =  f.baseName.replace(".gz","").replace(".vcf","").replace(".txt","").replace(".bed","")
-    file_type = f.extension
-    if(file_type == "gz") file_type = "vcf"
+    file_type0 = f.extension
+    if(file_type0 == "gz") file_type0 = "vcf"
     '''
-    echo !{file_type}
-
-    !{params.picard} LiftoverVcf \
-	   I=!{f} \
-	   O=!{input_tag}_!{params.genome_into}.!{file_type} \
-	   C=!{chain_file} \
-	   REJECT=!{input_tag}_!{params.genome_into}_reject.!{file_type} \
-	   R=!{params.ref} \
-	   VERBOSITY=ERROR
+    echo "Files are: !{params.file_type}"
+    
+    if [[ !{params.file_type} == "bed" ]; then
+    	!{params.picard} LiftOverIntervalList \
+	   	--INPUT=!{f} \
+	   	--OUTPUT=!{input_tag}_!{params.genome_into}.!{file_type0} \
+	   	--CHAIN=!{chain_file} \
+	   	--REJECT=!{input_tag}_!{params.genome_into}_reject.!{file_type0} \
+	   	--SEQUENCE_DICTIONARY=!{params.ref}.dict \
+	   	VERBOSITY=ERROR
+    else
+    	!{params.picard} LiftoverVcf \
+	   	I=!{f} \
+	   	O=!{input_tag}_!{params.genome_into}.!{file_type0} \
+	   	C=!{chain_file} \
+	   	REJECT=!{input_tag}_!{params.genome_into}_reject.!{file_type0} \
+	   	R=!{params.ref} \
+	   	VERBOSITY=ERROR
+    fi
     '''
 }
