@@ -24,13 +24,13 @@ params.chain_folder = null
 params.output_folder = "liftover_output"
 params.genome_from = null
 params.genome_into = null
-params.picard_jar = null
+params.picard = "picard"
 
 log.info ""
 log.info "--------------------------------------------------------"
 log.info "  LiftOver-nf : Nextflow pipeline for picard liftover    "
 log.info "--------------------------------------------------------"
-log.info "Copyright (C) IARC/WHO"
+log.info "Copyright (C) IARC/WHO - IRB Barcelona"
 log.info "This program comes with ABSOLUTELY NO WARRANTY; for details see LICENSE"
 log.info "This is free software, and you are welcome to redistribute it"
 log.info "under certain conditions; see LICENSE for details."
@@ -52,8 +52,8 @@ if (params.help) {
     log.info '    --chain_folder         FOLDER                  Folder containing chains files.'
     log.info '    --genome_from          STRING                  Name of genome of inputs.'
     log.info '    --genome_into          STRING                  Name of genome of outputs.'
-    log.info '    --picard_jar           STRING                  Path to executable picard jar.'
     log.info 'Optional arguments:'
+    log.info '    --picard               STRING                  Where is picard? default: picard.'
     log.info '    --output_folder      FOLDER                  Output folder (default: liftover_output).'
     log.info ''
     exit 1
@@ -98,7 +98,7 @@ process liftover {
     '''
     echo !{file_type}
 
-    java -jar !{params.picard_jar} LiftoverVcf \
+    !{params.picard} LiftoverVcf \
 	   I=!{f} \
 	   O=!{input_tag}_!{params.genome_into}.!{file_type} \
 	   C=!{chain_file} \
