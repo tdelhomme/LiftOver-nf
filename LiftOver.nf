@@ -104,12 +104,12 @@ process liftover {
     if [[ "!{params.file_type}" == "bed" ]]; then
     	echo "we are in the bed mode"
     	!{params.picard} LiftOverIntervalList \
-	   	--INPUT=!{f} \
-	   	--OUTPUT=!{input_tag}_!{params.genome_into}.!{file_type0} \
-	   	--CHAIN=!{chain_file} \
-	   	--REJECT=!{input_tag}_!{params.genome_into}_reject.!{file_type0} \
-	   	--SEQUENCE_DICTIONARY=!{params.ref}.dict \
-	   	VERBOSITY=ERROR
+	   	--INPUT !{f} \
+	   	--OUTPUT !{input_tag}_!{params.genome_into}.!{file_type0} \
+	   	--CHAIN !{chain_file} \
+	   	--REJECT !{input_tag}_!{params.genome_into}_reject.!{file_type0} \
+	   	--SEQUENCE_DICTIONARY !{params.ref}.dict \
+	   	--VERBOSITY ERROR
     else
     	echo "we are in the vcf mode"
     	!{params.picard} LiftoverVcf \
