@@ -26,7 +26,7 @@ params.genome_from = null
 params.genome_into = null
 params.picard = "picard"
 params.file_type = "bed"
-params.source_ref = null
+params.source_ref_dict = null
 
 log.info ""
 log.info "--------------------------------------------------------"
@@ -51,7 +51,7 @@ if (params.help) {
     log.info 'Mandatory arguments:'
     log.info '    --input_folder         FOLDER                  Folder containing input files.'
     log.info '    --ref                  FILE (with index)       Reference fasta file (target genome) indexed.'
-    log.info '    --source_ref           FILE (with index)       Reference fasta file corresponding to input files, indexed.'
+    log.info '    --source_ref_dict      FILE                    Reference fasta dictionnary corresponding to input files.'
     log.info '    --chain_folder         FOLDER                  Folder containing chains files.'
     log.info '    --genome_from          STRING                  Name of genome of inputs.'
     log.info '    --genome_into          STRING                  Name of genome of outputs.'
@@ -64,7 +64,7 @@ if (params.help) {
 }
 
 assert (params.ref != true) && (params.ref != null) : "please specify --ref option (--ref reference.fasta(.gz))"
-assert (params.source_ref != true) && (params.source_ref != null) : "please specify --source_ref option (--source_ref reference.fasta(.gz))"
+assert (params.source_ref_dict != true) && (params.source_ref_dict != null) : "please specify --source_ref_dict option (--source_ref_dict reference.dict)"
 assert (params.genome_from != true) && (params.genome_from != null) : "please specify --genome_from option"
 assert (params.genome_into != true) && (params.genome_into != null) : "please specify --genome_into option"
 
@@ -106,7 +106,7 @@ process liftover {
     
     if [[ "!{params.file_type}" == "bed" ]]; then
     	echo "we are in the bed mode"
-	!{params.picard} BedToIntervalList I=!{f} O=list.interval_list SD=!{params.source_ref}
+	!{params.picard} BedToIntervalList I=!{f} O=list.interval_list SD=!{params.source_ref_dict}
     	!{params.picard} LiftOverIntervalList \
 	   	--INPUT list.interval_list \
 	   	--OUTPUT !{input_tag}_!{params.genome_into}.!{file_type0} \
