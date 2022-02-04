@@ -78,7 +78,7 @@ if (fasta_ref.exists()) {assert fasta_ref_fai.exists() : "input fasta reference 
 try { assert file(params.input_folder).exists() : "\n WARNING : input folder not located in execution directory" } catch (AssertionError e) { println e.getMessage() }
 
 // recovering of input files
-f = Channel.fromPath( params.input_folder+'/*'+params.ext )
+f = Channel.fromPath( params.input_folder+'/*'+params.file_type )
   .ifEmpty { error "Cannot find any file in: ${params.input_folder}" }
 
 process liftover {
