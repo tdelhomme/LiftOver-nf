@@ -101,7 +101,8 @@ process liftover {
     '''
     echo "Files are: !{params.file_type}"
     
-    if [[ !{params.file_type} == "bed" ]]; then
+    if [[ "!{params.file_type}" == "bed" ]]; then
+    	echo "we are in the bed mode"
     	!{params.picard} LiftOverIntervalList \
 	   	--INPUT=!{f} \
 	   	--OUTPUT=!{input_tag}_!{params.genome_into}.!{file_type0} \
@@ -110,6 +111,7 @@ process liftover {
 	   	--SEQUENCE_DICTIONARY=!{params.ref}.dict \
 	   	VERBOSITY=ERROR
     else
+    	echo "we are in the vcf mode"
     	!{params.picard} LiftoverVcf \
 	   	I=!{f} \
 	   	O=!{input_tag}_!{params.genome_into}.!{file_type0} \
