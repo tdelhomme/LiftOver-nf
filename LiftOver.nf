@@ -25,6 +25,7 @@ params.output_folder = "liftover_output"
 params.genome_from = null
 params.genome_into = null
 params.picard = "picard"
+params.ext = ".bed"
 
 log.info ""
 log.info "--------------------------------------------------------"
@@ -54,7 +55,8 @@ if (params.help) {
     log.info '    --genome_into          STRING                  Name of genome of outputs.'
     log.info 'Optional arguments:'
     log.info '    --picard               STRING                  Where is picard? default: picard.'
-    log.info '    --output_folder      FOLDER                  Output folder (default: liftover_output).'
+    log.info '    --ext                  STRING                  Extension of input files, default:.bed.'
+    log.info '    --output_folder        FOLDER                  Output folder (default: liftover_output).'
     log.info ''
     exit 1
 }
@@ -75,7 +77,7 @@ if (fasta_ref.exists()) {assert fasta_ref_fai.exists() : "input fasta reference 
 try { assert file(params.input_folder).exists() : "\n WARNING : input folder not located in execution directory" } catch (AssertionError e) { println e.getMessage() }
 
 // recovering of input files
-f = Channel.fromPath( params.input_folder+'/*' )
+f = Channel.fromPath( params.input_folder+'/*'+params.ext )
   .ifEmpty { error "Cannot find any file in: ${params.input_folder}" }
 
 process liftover {
