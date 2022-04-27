@@ -77,4 +77,4 @@ nextflow run iarcbioinfo/LiftOver-nf --input_folder VCF/ --ref ref.fasta
 
   | Name      | Email | Description     |
   |-----------|---------------|-----------------|
-  | Tiffany Delhomme*    | delhommet@students.iarc.fr | Developer to contact for support |
+  | Tiffany Delhomme*    | tiffany.delhomme@irbbarcelona.org | Developer to contact for support |
