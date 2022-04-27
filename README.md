@@ -65,7 +65,7 @@ Flags are special parameters without value.
 
 Simple use case example:
 ```bash
-nextflow run iarcbioinfo/LiftOver-nf --input_folder VCF/ --ref ref.fasta
+nextflow run iarcbioinfo/LiftOver-nf --input_folder VCF/ --ref ref.fasta --chain_folder chains/ --genome_from hg19 --genome_into hg38
 ```
 
 ## Output
